@@ -18,7 +18,7 @@ startup/%.o: ../startup/%.S
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Compiler'
 	@echo $(PWD)
-	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F429ZITx -DSTM32F429I_DISCO -DSTM32F4 -DSTM32 -DDEBUG -DUSE_STDPERIPH_DRIVER -DSTM32F429_439xx -I"/home/viktor/workspace/chech/inc" -I"/home/viktor/workspace/chech/StdPeriph_Driver/inc" -I"/home/viktor/workspace/chech/CMSIS/device" -I"/home/viktor/workspace/chech/CMSIS/core" -I"/home/viktor/workspace/chech/Utilities/Common" -I"/home/viktor/workspace/chech/Utilities/STM32F429I-Discovery" -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -c -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32F429ZITx -DSTM32F429I_DISCO -DSTM32F4 -DSTM32 -DDEBUG -DUSE_STDPERIPH_DRIVER -DSTM32F429_439xx -I"C:/Users/Blych/Documents/Local repo/stm32f429i-disc0-obj-tracking/chech/inc" -I"C:/Users/Blych/Documents/Local repo/stm32f429i-disc0-obj-tracking/chech/StdPeriph_Driver/inc" -I"C:/Users/Blych/Documents/Local repo/stm32f429i-disc0-obj-tracking/chech/CMSIS/device" -I"C:/Users/Blych/Documents/Local repo/stm32f429i-disc0-obj-tracking/chech/CMSIS/core" -I"C:/Users/Blych/Documents/Local repo/stm32f429i-disc0-obj-tracking/chech/Utilities/Common" -I"C:/Users/Blych/Documents/Local repo/stm32f429i-disc0-obj-tracking/chech/Utilities/STM32F429I-Discovery" -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -c -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
