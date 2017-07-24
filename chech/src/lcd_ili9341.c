@@ -296,6 +296,35 @@ void LCD_ILI9341_Puts(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *font, ui
 	}
 }
 
+void LCD_ILI9341_PutMys(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *font, uint16_t foreground, uint16_t background) {
+	uint16_t startX = x;
+
+	/* Set X and Y coordinates */
+	ILI9341_x = x;
+	ILI9341_y = y;
+
+	while (*str) {
+		//New line
+		if (*str == '\n') {
+			ILI9341_y += font->FontHeight + 1;
+			//if after \n is also \r, than go to the left of the screen
+			if (*(str + 1) == '\r') {
+				ILI9341_x = 0;
+				str++;
+			} else {
+				ILI9341_x = startX;
+			}
+			str++;
+			continue;
+		} else if (*str == '\r') {
+			str++;
+			continue;
+		}
+
+		LCD_ILI9341_PutMyc(ILI9341_x, ILI9341_y, *str++, font, foreground, background);
+	}
+}
+
 void LCD_ILI9341_GetStringSize(char *str, LCD_FontDef_t *font, uint16_t *width, uint16_t *height) {
 	uint16_t w = 0;
 	*height = font->FontHeight;
@@ -317,6 +346,29 @@ void LCD_ILI9341_Putc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uint1
 	}
 	for (i = 0; i < font->FontHeight; i++) {
 		b = font->data[(c - 32) * font->FontHeight + i];
+		for (j = 0; j < font->FontWidth; j++) {
+			if ((b << j) & 0x8000) {
+				LCD_ILI9341_DrawPixel(ILI9341_x + j, (ILI9341_y + i), foreground);
+			} else {
+				LCD_ILI9341_DrawPixel(ILI9341_x + j, (ILI9341_y + i), background);
+			}
+		}
+	}
+	ILI9341_x += font->FontWidth;
+}
+
+void LCD_ILI9341_PutMyc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uint16_t foreground, uint16_t background) {
+	uint32_t i, b, j;
+	/* Set coordinates */
+	ILI9341_x = x;
+	ILI9341_y = y;
+	if ((ILI9341_x + font->FontWidth) > ILI9341_Opts.width) {
+		//If at the end of a line of display, go to new line and set x to 0 position
+		ILI9341_y += font->FontHeight;
+		ILI9341_x = 0;
+	}
+	for (i = 0; i < font->FontHeight; i++) {
+		b = font->data[(c - 144) * font->FontHeight + i];
 		for (j = 0; j < font->FontWidth; j++) {
 			if ((b << j) & 0x8000) {
 				LCD_ILI9341_DrawPixel(ILI9341_x + j, (ILI9341_y + i), foreground);
