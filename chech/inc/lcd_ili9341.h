@@ -135,7 +135,7 @@ typedef struct {
 extern LCD_FontDef_t LCD_Font_7x10;
 extern LCD_FontDef_t LCD_Font_11x18;
 extern LCD_FontDef_t LCD_Font_16x26;
-extern LCD_FontDef_t LCD_Font_9x14;
+extern LCD_FontDef_t LCD_Font_16x21;
 
 /*
 * Initialize ILI9341 LCD
@@ -258,6 +258,7 @@ extern void LCD_ILI9341_Puts(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *f
 * 	- uint16_t *width: Pointer to variable to store width
 * 	- uint16_t *height: ointer to variable to store height
 */
+
 extern void LCD_ILI9341_GetStringSize(char *str, LCD_FontDef_t *font, uint16_t *width, uint16_t *height);
 
 /*

@@ -319,6 +319,9 @@ void LCD_ILI9341_PutMys(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *font, 
 		} else if (*str == '\r') {
 			str++;
 			continue;
+		} else if (*str == 208){
+			str++;
+			continue;
 		}
 
 		LCD_ILI9341_PutMyc(ILI9341_x, ILI9341_y, *str++, font, foreground, background);
@@ -368,7 +371,7 @@ void LCD_ILI9341_PutMyc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uin
 		ILI9341_x = 0;
 	}
 	for (i = 0; i < font->FontHeight; i++) {
-		b = font->data[(c - 144) * font->FontHeight + i];
+		b = font->data[(c - 134) * font->FontHeight + i];
 		for (j = 0; j < font->FontWidth; j++) {
 			if ((b << j) & 0x8000) {
 				LCD_ILI9341_DrawPixel(ILI9341_x + j, (ILI9341_y + i), foreground);
