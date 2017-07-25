@@ -304,26 +304,7 @@ void LCD_ILI9341_PutMys(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *font, 
 	ILI9341_y = y;
 
 	while (*str) {
-		//New line
-		if (*str == '\n') {
-			ILI9341_y += font->FontHeight + 1;
-			//if after \n is also \r, than go to the left of the screen
-			if (*(str + 1) == '\r') {
-				ILI9341_x = 0;
-				str++;
-			} else {
-				ILI9341_x = startX;
-			}
-			str++;
-			continue;
-		} else if (*str == '\r') {
-			str++;
-			continue;
-		} else if (*str == 208){
-			str++;
-			continue;
-		}
-
+		str++;
 		LCD_ILI9341_PutMyc(ILI9341_x, ILI9341_y, *str++, font, foreground, background);
 	}
 }

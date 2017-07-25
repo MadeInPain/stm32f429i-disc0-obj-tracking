@@ -73,7 +73,7 @@ int main(void){
 
 	// LCD welcome page
 	LCD_ILI9341_Fill(ILI9341_COLOR_BLACK);
-  LCD_ILI9341_PutMys(20, 110, "ІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_BLACK);
+  LCD_ILI9341_PutMys(20, 20, "прст", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_BLACK);
 
 	// Increse SPI baudrate
 	LCD_SPI_BaudRateUp();
