@@ -136,40 +136,55 @@ void MCO1_init(void){
 }
 
 void SCCB_init(void){
+	// this is for the GPIO pins used as I2C1SDA and I2C1SCL
 	GPIO_InitTypeDef GPIO_InitStructure;
+	// this is for the I2C1 initilization
 	I2C_InitTypeDef I2C_InitStructure;
 
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+	/* enable APB1 peripheral clock for I2C1*/
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
+	/* enable the peripheral clock for the pins used by PB6 for I2C SCL and PB9 for I2C1_SDL*/
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
 
 	// GPIO config
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;		//PB8 - SIOC
-																														//PB9 - SIOD
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;		//PB8 - SIOC //PB9 - SIOD
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; // the pins are configured as alternate function so the USART peripheral has access to them
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz; // this defines the IO speed and has nothing to do with the baudrate!
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD; // this defines the output type as open drain
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; // this activates the pullup resistors on the IO pins
+	GPIO_Init(GPIOB, &GPIO_InitStructure); // now all the values are passed to the GPIO_Init()
 
 	// GPIO AF config
+	/*
+	 * The I2C1_SCL and I2C1_SDA pins are now connected to their AF
+	 * so that the I2C1 can take over control of the
+	 * pins
+	 */
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource8, GPIO_AF_I2C1);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource9, GPIO_AF_I2C1);
 
 	// I2C config
-  I2C_DeInit(I2C1);
-  I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
-  I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
-  I2C_InitStructure.I2C_OwnAddress1 = 0x00;
-  I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
-  I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
-  I2C_InitStructure.I2C_ClockSpeed = 100000;
+	I2C_StructInit(&I2C_InitStructure); // -- ??
+	//------------------------------------------
+	I2C_DeInit(I2C1);
+	/* Enable the I2C peripheral */
+	I2C_Cmd(I2C1, ENABLE);
+	/* Set the I2C structure parameters */
+	I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
+	I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
+	I2C_InitStructure.I2C_OwnAddress1 = 0x00;
+	I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
+	I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+	I2C_InitStructure.I2C_ClockSpeed = 100000;
+	/* I2C Peripheral Enable */
 	I2C_ITConfig(I2C1, I2C_IT_ERR, ENABLE);
-  I2C_Init(I2C1,&I2C_InitStructure);
+	/* Initialize the I2C peripheral w/ selected parameters */
+	I2C_Init(I2C1,&I2C_InitStructure);
 	I2C_Cmd(I2C1, ENABLE);
 }
 
 bool SCCB_write_reg(uint8_t reg_addr, uint8_t* data){
-	uint32_t timeout = 0xFFFFFF;
+	uint32_t timeout = 0x7FFFFF;
 
 	while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY)){
 		if ((timeout--) == 0){
@@ -232,6 +247,7 @@ bool OV7670_init(void){
 
 		LCD_ILI9341_DrawLine(99+i, 110, 99+i, 130, ILI9341_COLOR_WHITE);
 		Delay(0xFFFF);
+		Delay(0x00FF);
 	}
 
 	return err;
