@@ -1,27 +1,3 @@
-/*
-*	==========================================================================
-*   lcd_ili9341.c
-*   (c) 2014, Petr Machala
-*
-*   Description:
-*   ILI9341 control file for STM32F4xx with SPI communication only.
-*   Optimized for 32F429IDISCOVERY board.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*	==========================================================================
-*/
-
 #include "lcd_ili9341.h"
 
 uint16_t ILI9341_x;
@@ -297,15 +273,25 @@ void LCD_ILI9341_Puts(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *font, ui
 }
 
 void LCD_ILI9341_PutMys(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *font, uint16_t foreground, uint16_t background) {
-	uint16_t startX = x;
+	//uint16_t startX = x;
 
 	/* Set X and Y coordinates */
 	ILI9341_x = x;
 	ILI9341_y = y;
+	int16_t tmp;
 
 	while (*str) {
-		str++;
-		LCD_ILI9341_PutMyc(ILI9341_x, ILI9341_y, *str++, font, foreground, background);
+
+		if(*str == 0xD0){
+			tmp = 134;
+			str++;
+			continue;
+		} else if(*str == 0xD1){
+			tmp = 134-64;
+			str++;
+			continue;
+		}
+		LCD_ILI9341_PutMyc(ILI9341_x, ILI9341_y, *str++, font, foreground, background, tmp);
 	}
 }
 
@@ -341,18 +327,21 @@ void LCD_ILI9341_Putc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uint1
 	ILI9341_x += font->FontWidth;
 }
 
-void LCD_ILI9341_PutMyc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uint16_t foreground, uint16_t background) {
+void LCD_ILI9341_PutMyc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uint16_t foreground, uint16_t background, int16_t tmp) {
 	uint32_t i, b, j;
+
+	uint8_t index = c - tmp;
 	/* Set coordinates */
 	ILI9341_x = x;
 	ILI9341_y = y;
+
 	if ((ILI9341_x + font->FontWidth) > ILI9341_Opts.width) {
 		//If at the end of a line of display, go to new line and set x to 0 position
 		ILI9341_y += font->FontHeight;
 		ILI9341_x = 0;
 	}
 	for (i = 0; i < font->FontHeight; i++) {
-		b = font->data[(c - 134) * font->FontHeight + i];
+		b = font->data[(index) * font->FontHeight + i];
 		for (j = 0; j < font->FontWidth; j++) {
 			if ((b << j) & 0x8000) {
 				LCD_ILI9341_DrawPixel(ILI9341_x + j, (ILI9341_y + i), foreground);
@@ -362,6 +351,7 @@ void LCD_ILI9341_PutMyc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uin
 		}
 	}
 	ILI9341_x += font->FontWidth;
+
 }
 
 

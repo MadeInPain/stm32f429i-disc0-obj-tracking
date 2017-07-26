@@ -1,27 +1,3 @@
-/*
-*	==========================================================================
-*   main.c
-*   (c) 2014, Petr Machala
-*
-*   Description:
-*   OptRec sensor system main file.
-*   Optimized for 32F429IDISCOVERY board.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*	==========================================================================
-*/
-
 #include "stm32f4xx.h"
 #include "system_control.h"
 #include "OV7670_control.h"
@@ -52,29 +28,32 @@ int main(void){
 	STM_LedOn(LED_RED);
 
 	// LCD init page
-  LCD_ILI9341_Rotate(LCD_ILI9341_Orientation_Landscape_2);
-  LCD_ILI9341_Fill(ILI9341_COLOR_BLACK);
+	LCD_ILI9341_Rotate(LCD_ILI9341_Orientation_Landscape_2);
+	LCD_ILI9341_Fill(ILI9341_COLOR_RED);
 
-	LCD_ILI9341_Puts(20, 55, "Configuring camera", &LCD_Font_16x26, ILI9341_COLOR_WHITE, ILI9341_COLOR_BLACK);
+	LCD_ILI9341_PutMys(0, 55, "НалаштуванняЈкамери", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
 	LCD_ILI9341_DrawRectangle(99, 110, 221, 130, ILI9341_COLOR_WHITE);
 
 	// OV7670 configuration
 	err = OV7670_init();
 
 	if (err == true){
-		LCD_ILI9341_Puts(100, 165, "Failed", &LCD_Font_16x26, ILI9341_COLOR_RED, ILI9341_COLOR_BLACK);
-		LCD_ILI9341_Puts(20, 200, "Push reset button", &LCD_Font_16x26, ILI9341_COLOR_WHITE, ILI9341_COLOR_BLACK);
+		LCD_ILI9341_PutMys(100, 165, "Невдало", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
+		LCD_ILI9341_PutMys(0, 200, "НатиснітьЈкнопку", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
+		LCD_ILI9341_PutMys(0, 220, "скиду", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
 		while(1){
 		}
 	}
 	else{
-		LCD_ILI9341_Puts(100, 165, "Success", &LCD_Font_16x26, ILI9341_COLOR_WHITE, ILI9341_COLOR_BLACK);
+		LCD_ILI9341_PutMys(100, 165, "Вдало", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
 	}
 
 	// LCD welcome page
 	LCD_ILI9341_Fill(ILI9341_COLOR_BLACK);
-  LCD_ILI9341_PutMys(20, 20, "прст", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_BLACK);
-
+	//LCD_ILI9341_PutMys(0, 20, "НуЈнічосі", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
+	LCD_ILI9341_PutMys(0, 40, "НатиснітьЈкористува", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
+	LCD_ILI9341_PutMys(0, 60, "цькуЈкнопкуЈдля", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
+	LCD_ILI9341_PutMys(0, 80, "старту", &LCD_Font_16x21, ILI9341_COLOR_WHITE, ILI9341_COLOR_RED);
 	// Increse SPI baudrate
 	LCD_SPI_BaudRateUp();
 

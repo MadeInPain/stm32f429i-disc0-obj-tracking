@@ -1,27 +1,3 @@
-/*
-*	==========================================================================
-*   lcd_ili9341.h
-*   (c) 2014, Petr Machala
-*
-*   Description:
-*   ILI9341 control library for STM32F4xx with SPI communication only.
-*   Optimized for 32F429IDISCOVERY board.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*	==========================================================================
-*/
-
 #ifndef LCD_ILI9341_H
 #define LCD_ILI9341_H
 
@@ -318,5 +294,6 @@ extern void LCD_ILI9341_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t c
 * - uint16_t color: circle color
 */
 extern void LCD_ILI9341_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
-
+extern void LCD_ILI9341_PutMys(uint16_t x, uint16_t y, char *str, LCD_FontDef_t *font, uint16_t foreground, uint16_t background);
+extern void LCD_ILI9341_PutMyc(uint16_t x, uint16_t y, char c, LCD_FontDef_t *font, uint16_t foreground, uint16_t background, int16_t tmp);
 #endif
